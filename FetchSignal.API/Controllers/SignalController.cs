@@ -21,7 +21,7 @@ namespace FetchSignal.API.Controllers
                 "https://www.w3schools.com/xml/plant_catalog.xml",
                 "https://www.tcmb.gov.tr/kurlar/today.xml"
             };
-            await _signalService.FetchDataFromUrl(urls);
+            //await _signalService.FetchDataFromUrl(urls);
             return Ok("Recurring Fetch Data Job Started");
         }
     }

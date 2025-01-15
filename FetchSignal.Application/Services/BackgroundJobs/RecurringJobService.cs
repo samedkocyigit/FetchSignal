@@ -19,7 +19,7 @@ namespace FetchSignal.Application.Services.BackgroundJobs
         {
             try
             {
-                var response = await _httpClient.PostAsync("api/Signal/with-recurring-job", null);
+                var response = await _httpClient.PostAsync("api/RawData/without-url", null);
 
                 if (!response.IsSuccessStatusCode)
                 {

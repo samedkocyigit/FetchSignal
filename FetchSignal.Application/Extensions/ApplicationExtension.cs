@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FetchSignal.Application.Services.BackgroundJobs;
+﻿using FetchSignal.Application.Services.BackgroundJobs;
+using FetchSignal.Application.Services.RawDataServices;
 using FetchSignal.Application.Services.SignalServices;
 using Hangfire;
-using Hangfire.PostgreSql;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Filters;
+using Hangfire.PostgreSql;
+using System.Reflection;
+using AutoMapper;
+using FetchSignal.Application.Services.ListOfUrlsServices;
+using FetchSignal.Application.Services.ApplicationsServices;
+using FetchSignal.Application.Services.SourceUrlServices;
+using FetchSignal.Application.Services.FetchedDataServices;
 
 namespace FetchSignal.Application.Extensions
 {
@@ -22,10 +22,19 @@ namespace FetchSignal.Application.Extensions
                 client.BaseAddress = new Uri("https://localhost:7188/");
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             });
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
 
             services.AddScoped<ISignalService, SignalService>();
+            services.AddScoped<IRawDataService, RawDataService>();
+            services.AddScoped<IListOfUrlsService, ListOfUrlsService>();
+            services.AddScoped<IApplicationService, ApplicationService>();
+            services.AddScoped<ISourceUrlService, SourceUrlService>();
+            services.AddScoped<IFetchedDataService, FetchedDataService>();
             services.AddRecurrgingService();
+            
             services.AddSwagger();
+
             using (var serviceProvider = services.BuildServiceProvider())
             {
                 var recurringJobManager = serviceProvider.GetRequiredService<IRecurringJobManager>();
@@ -43,6 +52,7 @@ namespace FetchSignal.Application.Extensions
         {
             services.AddHangfire(config => config.UsePostgreSqlStorage("host=localhost;port=5432;username=postgres; password=postgres; database=hangfire_db;"));
             services.AddHangfireServer();
+            
             services.AddScoped<RecurringJobs>();
             services.AddScoped<RecurringJobService>();
 
@@ -50,17 +60,19 @@ namespace FetchSignal.Application.Extensions
         }
         public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
-            services.AddSwaggerGen(options =>
-            {
-                options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
-                    In = ParameterLocation.Header,
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.ApiKey
-                });
-                options.OperationFilter<SecurityRequirementsOperationFilter>();
-            });
+            services.AddSwaggerGen(
+                //options =>
+                //{
+                //    options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
+                //    {
+                //        Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
+                //        In = ParameterLocation.Header,
+                //        Name = "Authorization",
+                //        Type = SecuritySchemeType.ApiKey
+                //    });
+                //    options.OperationFilter<SecurityRequirementsOperationFilter>();
+                //}
+            );
 
             return services;
         }

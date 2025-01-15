@@ -8,6 +8,6 @@ namespace FetchSignal.Application.Services.SignalServices
 {
     public interface ISignalService
     {
-        Task FetchDataFromUrl(List<string> urls);
+        //Task FetchDataFromUrl(List<string> urls);
     }
 }

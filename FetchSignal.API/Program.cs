@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using FetchSignal.Application.Extensions;
 using FetchSignal.Infrastructure.Extension;
 using Hangfire;
@@ -7,6 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 builder.Services.AddControllers();
+//builder.Services.AddControllers()
+//    .AddJsonOptions(options =>
+//    {
+//        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+//        options.JsonSerializerOptions.WriteIndented = true;
+//    });
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructureLayer();
